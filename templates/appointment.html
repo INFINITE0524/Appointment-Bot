@@ -26,25 +26,44 @@
             margin: 0 auto;
             height: auto;
         }
-        .fc {
-            height: 100%;
-        }
-        .fc-toolbar-title {
-            text-align: center;
-            font-size: 1.5em;
-        }
-        .fc-button {
-            background-color: transparent;
-            border: none;
-            font-size: 1.2em;
-            color: #333;
-        }
-        .fc-daygrid-day {
-            background-color: transparent !important;
-        }
-        #booking-options {
+        /* 模態框樣式 */
+        .modal {
             display: none;
+            position: fixed;
+            z-index: 99;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
+        .modal-footer {
+            text-align: right;
             margin-top: 20px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
         }
         button {
             background-color: #ff5722;
@@ -53,7 +72,6 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-right: 10px;
         }
         button:hover {
             background-color: #e64a19;
@@ -64,19 +82,29 @@
 
 <div id="calendar-container">
     <div id='calendar'></div>
-    <div id="booking-options">
-        <h3>選擇一個時間段</h3>
-        <button>09:00 AM</button>
-        <button>12:00 PM</button>
-        <button>03:00 PM</button>
-        <button>06:00 PM</button>
+</div>
+
+<!-- 模態框 -->
+<div id="dateModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="modalText">你要預約這個日期嗎?</p>
+        <div class="modal-footer">
+            <button id="confirmBtn">確定</button>
+            <button id="cancelBtn">取消</button>
+        </div>
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
-        var bookingOptions = document.getElementById('booking-options');
+        var modal = document.getElementById("dateModal");
+        var modalText = document.getElementById("modalText");
+        var span = document.getElementsByClassName("close")[0];
+        var confirmBtn = document.getElementById("confirmBtn");
+        var cancelBtn = document.getElementById("cancelBtn");
+        var selectedDate;
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
@@ -89,11 +117,36 @@
                 right: 'next'
             },
             dateClick: function(info) {
-                bookingOptions.style.display = 'block';
+                selectedDate = info.dateStr;
+                modalText.textContent = "你要預約 " + selectedDate + " 嗎?";
+                modal.style.display = "block";
             }
         });
 
         calendar.render();
+
+        // 當點擊X時關閉模態框
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // 當點擊取消時關閉模態框
+        cancelBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // 當點擊確定時處理預約邏輯
+        confirmBtn.onclick = function() {
+            alert("你已成功預約 " + selectedDate);
+            modal.style.display = "none";
+        }
+
+        // 當用戶點擊模態框外部時關閉模態框
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
     });
 </script>
 
