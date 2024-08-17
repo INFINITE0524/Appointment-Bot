@@ -39,20 +39,10 @@ def create_appointment():
 
     return jsonify({'message': 'Appointment created'}), 201
 
-# List all appointments
-@app.route('/appointments', methods=['GET'])
-def get_appointments():
-    appointments = Appointment.query.all()
-    return jsonify([{
-        'id': a.id,
-        'date': a.date,
-        'name': a.name
-    } for a in appointments])
-
 # Homepage
-@app.route('/')
+@app.route('/appointment')
 def index():
-    return render_template('index.html')
+    return render_template('appointment.html')
 
 if __name__ == '__main__':
     # Run the application
