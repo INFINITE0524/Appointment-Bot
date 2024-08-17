@@ -1,20 +1,17 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///APB.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    create_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    ap001 = db.Column(db.String(50), nullable=False)  # 預約日期
-    ap002 = db.Column(db.String(50), nullable=False)  # 預約者
+    ap001 = db.Column(db.String(100), nullable=False)
+    ap002 = db.Column(db.String(100), nullable=False)
 
-    def __repr__(self):
-        return f'<Appointment {self.id}>'
+with app.app_context():
+    db.create_all()  # 創建所有表格
 
 @app.route('/appointment')
 def home():
@@ -36,10 +33,7 @@ def reserve():
         return jsonify({'message': f'預約成功: {date}'}), 200
     except Exception as e:
         db.session.rollback()  # 在出錯時回滾事務
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': f'伺服器錯誤: {str(e)}'}), 500
 
 if __name__ == '__main__':
-    # 確保在首次運行時創建數據庫
-    with app.app_context():
-        db.create_all()
     app.run(host='0.0.0.0', port=5000)
