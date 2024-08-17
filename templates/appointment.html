@@ -109,9 +109,9 @@
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            locale: 'zh-tw', 
+            locale: 'zh-tw',
             events: [],
-            height: 'auto', 
+            height: 'auto',
             headerToolbar: {
                 left: 'prev',
                 center: 'title',
@@ -138,7 +138,25 @@
 
         // 當點擊確定時處理預約邏輯
         confirmBtn.onclick = function() {
-            alert("你已成功預約 " + selectedDate);
+            var person = prompt("請輸入您的姓名");
+            if (person) {
+                fetch('/reserve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ date: selectedDate, person: person })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                    } else if (data.error) {
+                        alert("錯誤: " + data.error);
+                    }
+                })
+                .catch(error => alert("發生錯誤: " + error));
+            }
             modal.style.display = "none";
         }
 
