@@ -7,13 +7,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Appointment(db.Model):
+    __tablename__ = 'AP00'
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.String(10), nullable=False)
-    person = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
 
-    def __init__(self, date, person):
+    def __init__(self, date, name):
         self.date = date
-        self.person = person
+        self.name = name
 
 @app.route('/appointment')
 def home():
@@ -21,22 +22,23 @@ def home():
 
 @app.route('/reserve', methods=['POST'])
 def reserve():
-    data = request.get_json()
+    data = request.json
     date = data.get('date')
-    person = data.get('person')
+    name = data.get('name')
 
-    if not date or not person:
+    if not date or not name:
         return jsonify({'error': 'Missing data'}), 400
 
     try:
-        AP00 = AP00(date=date, person=person)
-        db.session.add(AP00)
+        new_appointment = Appointment(date=date, name=name)
+        db.session.add(new_appointment)
         db.session.commit()
-        return jsonify({'success': True}), 200
+        return jsonify({'message': 'Reservation successful'}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    db.create_all()
+    with app.app_context():
+        db.create_all()  # Ensure tables are created
     app.run(host='0.0.0.0', port=5000)
