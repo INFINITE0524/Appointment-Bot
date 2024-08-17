@@ -1,17 +1,15 @@
 from flask import Flask, request, jsonify, render_template
 import sqlite3
-from sqlite3 import Error
 
-# Initialize Flask application
 app = Flask(__name__)
 
-# Helper function to connect to the SQLite database
+# 連接到 SQLite 數據庫
 def get_db_connection():
     conn = sqlite3.connect('APB.db')
     conn.row_factory = sqlite3.Row
     return conn
 
-# Create an appointment
+# 創建一個預約
 @app.route('/appointments', methods=['POST'])
 def create_appointment():
     data = request.json
@@ -23,22 +21,17 @@ def create_appointment():
 
     conn = get_db_connection()
     cursor = conn.cursor()
-
-    try:
-        cursor.execute('INSERT INTO AP00 (date, name) VALUES (?, ?)', (date, name))
-        conn.commit()
-    except Error as e:
-        return jsonify({'message': str(e)}), 500
-    finally:
-        conn.close()
+    cursor.execute("INSERT INTO AP00 (date, name) VALUES (?, ?)", (date, name))
+    conn.commit()
+    conn.close()
 
     return jsonify({'message': 'Appointment created'}), 201
 
-# Homepage
+# 主頁
 @app.route('/appointment')
 def index():
     return render_template('appointment.html')
 
 if __name__ == '__main__':
-    # Run the application
+    # 運行應用
     app.run(debug=True, host='0.0.0.0')
