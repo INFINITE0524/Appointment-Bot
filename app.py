@@ -16,7 +16,7 @@ class Appointment(db.Model):
     def __repr__(self):
         return f'<Appointment {self.id}>'
 
-@app.route('/')
+@app.route('/appointment')
 def home():
     return render_template('appointment.html')
 
