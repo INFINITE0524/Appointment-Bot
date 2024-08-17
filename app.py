@@ -22,10 +22,7 @@ class Appointment(db.Model):
 with app.app_context():
     db.create_all()
 
-# 路由：首頁
-@app.route('/')
-def home():
-    return render_template('index.html')
+
 
 # 路由：處理預約請求
 @app.route('/appointments', methods=['POST'])
