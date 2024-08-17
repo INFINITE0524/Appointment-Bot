@@ -10,8 +10,11 @@ db = SQLAlchemy(app)
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     create_date = db.Column(db.DateTime, default=datetime.datetime.utcnow)
-    ap001 = db.Column(db.String(50), nullable=False)
-    ap002 = db.Column(db.String(50), nullable=False)
+    ap001 = db.Column(db.String(50), nullable=False)  # 預約日期
+    ap002 = db.Column(db.String(50), nullable=False)  # 預約者
+
+    def __repr__(self):
+        return f'<Appointment {self.id}>'
 
 @app.route('/reserve', methods=['POST'])
 def reserve():
@@ -28,7 +31,15 @@ def reserve():
         db.session.commit()
         return jsonify({'message': f'預約成功: {date}'}), 200
     except Exception as e:
+        db.session.rollback()  # 在出錯時回滾事務
         return jsonify({'error': str(e)}), 500
 
+@app.route('/appointment')
+def index():
+    return app.send_static_file('appointment.html')
+
 if __name__ == '__main__':
+    # 確保在首次運行時創建數據庫
+    with app.app_context():
+        db.create_all()
     app.run(host='0.0.0.0', port=10000)
