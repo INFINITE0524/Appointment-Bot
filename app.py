@@ -29,8 +29,8 @@ def reserve():
         return jsonify({'error': 'Missing data'}), 400
 
     try:
-        appointment = Appointment(date=date, person=person)
-        db.session.add(appointment)
+        AP00 = AP00(date=date, person=person)
+        db.session.add(AP00)
         db.session.commit()
         return jsonify({'success': True}), 200
     except Exception as e:
