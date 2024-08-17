@@ -36,7 +36,7 @@ def reserve():
 
 @app.route('/appointment')
 def index():
-    return app.send_static_file('appointment.html')
+    return render_template('appointment.html')
 
 if __name__ == '__main__':
     # 確保在首次運行時創建數據庫
