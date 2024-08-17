@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment</title>
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        #calendar-container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        #calendar {
+            max-width: 100%;
+            margin: 0 auto;
+            height: auto;
+        }
+        .fc {
+            height: 100%;
+        }
+        .fc-toolbar-title {
+            text-align: center;
+            font-size: 1.5em;
+        }
+        .fc-button {
+            background-color: transparent;
+            border: none;
+            font-size: 1.2em;
+            color: #333;
+        }
+        .fc-daygrid-day {
+            background-color: transparent !important;
+        }
+        #booking-options {
+            display: none;
+            margin-top: 20px;
+        }
+        button {
+            background-color: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #e64a19;
+        }
+    </style>
+</head>
+<body>
+
+<div id="calendar-container">
+    <div id='calendar'></div>
+    <div id="booking-options">
+        <h3>選擇一個時間段</h3>
+        <button>09:00 AM</button>
+        <button>12:00 PM</button>
+        <button>03:00 PM</button>
+        <button>06:00 PM</button>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var bookingOptions = document.getElementById('booking-options');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'zh-tw', 
+            events: [],
+            height: 'auto', 
+            headerToolbar: {
+                left: 'prev',
+                center: 'title',
+                right: 'next'
+            },
+            dateClick: function(info) {
+                bookingOptions.style.display = 'block';
+            }
+        });
+
+        calendar.render();
+    });
+</script>
+
+</body>
+</html>
