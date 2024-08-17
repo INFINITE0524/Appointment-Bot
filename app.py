@@ -1,44 +1,35 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
-
-# 設置 SQLite 資料庫 URI
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///appointments.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# 初始化 SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///APB.db'
 db = SQLAlchemy(app)
 
-# 定義 Appointment 資料模型
-class Appointment(db.Model):
+class AP00(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(10), nullable=False)
-
-    def __init__(self, date):
-        self.date = date
-
-# 初始化資料庫
-with app.app_context():
-    db.create_all()
+    CreateDate = db.Column(db.DateTime, default=datetime.utcnow)
+    AP001 = db.Column(db.String(50), nullable=False)
+    AP002 = db.Column(db.String(50), nullable=False)
 
 @app.route('/appointment')
-def home():
+def index():
     return render_template('appointment.html')
 
+@app.route('/reserve', methods=['POST'])
+def reserve():
+    data = request.json
+    ap001 = data.get('date')
+    ap002 = data.get('person')
+    
+    if not ap001 or not ap002:
+        return jsonify({'error': '缺少日期或人員資訊'}), 400
 
-# 路由：處理預約請求
-@app.route('/appointments', methods=['POST'])
-def add_appointment():
-    data = request.get_json()
-    date = data.get('date')
-
-    # 創建新的預約記錄並保存到資料庫
-    new_appointment = Appointment(date)
-    db.session.add(new_appointment)
+    new_reservation = AP00(AP001=ap001, AP002=ap002)
+    db.session.add(new_reservation)
     db.session.commit()
-
-    return jsonify({'message': f'已預約 {date}'}), 201
+    
+    return jsonify({'message': '預約成功'}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
