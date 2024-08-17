@@ -137,7 +137,26 @@
 
         // 當點擊確定時處理預約邏輯
         confirmBtn.onclick = function() {
-            alert("你已成功預約 " + selectedDate);
+            var name = prompt("請輸入你的名字:", "");
+            if (name) {
+                fetch('/reserve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        date: selectedDate,
+                        name: name
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('你已成功預約 ' + selectedDate);
+                })
+                .catch(error => {
+                    alert('預約失敗，請稍後再試。');
+                });
+            }
             modal.style.display = "none";
         }
 
