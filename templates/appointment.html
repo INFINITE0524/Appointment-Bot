@@ -108,9 +108,8 @@
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
-            locale: 'zh-tw', 
-            events: [],
-            height: 'auto', 
+            locale: 'zh-tw',
+            height: 'auto',
             headerToolbar: {
                 left: 'prev',
                 center: 'title',
@@ -137,27 +136,26 @@
 
         // 當點擊確定時處理預約邏輯
         confirmBtn.onclick = function() {
-            var name = prompt("請輸入你的名字:", "");
-            if (name) {
-                fetch('/reserve', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        date: selectedDate,
-                        name: name
-                    })
+            // 發送請求到後端
+            fetch('/reserve', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    date: selectedDate,
+                    person: '預約者名稱'  // 這裡替換為實際的預約者名稱
                 })
-                .then(response => response.json())
-                .then(data => {
-                    alert('你已成功預約 ' + selectedDate);
-                })
-                .catch(error => {
-                    alert('預約失敗，請稍後再試。');
-                });
-            }
-            modal.style.display = "none";
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message || "預約成功");
+                modal.style.display = "none";
+            })
+            .catch(error => {
+                alert("預約失敗: " + error.message);
+                modal.style.display = "none";
+            });
         }
 
         // 當用戶點擊模態框外部時關閉模態框
