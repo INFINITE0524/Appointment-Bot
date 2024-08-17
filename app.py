@@ -1,27 +1,15 @@
 from flask import Flask, request, jsonify, render_template
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+import sqlite3
+from sqlite3 import Error
 
 # Initialize Flask application
 app = Flask(__name__)
 
-# Configure the SQLite database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///APB.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Initialize SQLAlchemy and Flask-Migrate
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-# Define the Appointment model
-class Appointment(db.Model):
-    __tablename__ = 'AP00'
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(50), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
-    
-    def __repr__(self):
-        return f'<Appointment {self.id} - {self.date}>'
+# Helper function to connect to the SQLite database
+def get_db_connection():
+    conn = sqlite3.connect('APB.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 # Create an appointment
 @app.route('/appointments', methods=['POST'])
@@ -33,9 +21,16 @@ def create_appointment():
     if not date or not name:
         return jsonify({'message': 'Missing data'}), 400
 
-    new_appointment = Appointment(date=date, name=name)
-    db.session.add(new_appointment)
-    db.session.commit()
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute('INSERT INTO AP00 (date, name) VALUES (?, ?)', (date, name))
+        conn.commit()
+    except Error as e:
+        return jsonify({'message': str(e)}), 500
+    finally:
+        conn.close()
 
     return jsonify({'message': 'Appointment created'}), 201
 
