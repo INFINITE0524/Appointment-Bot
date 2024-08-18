@@ -1,50 +1,67 @@
 from flask import Flask, request, jsonify, render_template
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+import sqlite3 as lite
 import os
+import pandas as pd
+from datetime import datetime
 
-# Initialize Flask application
 app = Flask(__name__)
 
-# Configure the PostgreSQL database using the DATABASE_URL environment variable
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apb_user:7jYbxtT3DGMgIydfWLI5zINimel5jGZ1@dpg-cr0l6mrtq21c73ci36c0-a/apb'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# SQLite database path
+dbpath = 'APB.db'
 
-# Initialize SQLAlchemy and Flask-Migrate
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+# Function to fetch appointments from the database
+def fetch_appointments():
+    if not os.path.exists(dbpath):
+        return pd.DataFrame(), {'errormsg': '找不到 APB.db'}
 
-# Define the Appointment model
-class Appointment(db.Model):
-    __tablename__ = 'appointments'
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(50), nullable=False)
-    name = db.Column(db.String(100), nullable=False)
+    with lite.connect(dbpath) as con:
+        query = "SELECT * FROM AP00;"
+        df = pd.read_sql_query(query, con)
+    
+    return df, {}
 
-    def __repr__(self):
-        return f'<Appointment {self.id} - {self.date}>'
+# Function to insert an appointment into the database
+def insert_appointment(ap001_date, ap002_person):
+    if not os.path.exists(dbpath):
+        return {'errormsg': '找不到 APB.db'}
 
-# Create an appointment
+    try:
+        with lite.connect(dbpath) as con:
+            cur = con.cursor()
+            create_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            query = "INSERT INTO AP00 (CreateDate, AP001, AP002) VALUES (?, ?, ?);"
+            cur.execute(query, (create_date, ap001_date, ap002_person))
+            con.commit()
+        return {'message': '預約成功'}
+    except Exception as e:
+        return {'errormsg': str(e)}
+
+# Route to create an appointment
 @app.route('/reserve', methods=['POST'])
 def reserve_appointment():
     data = request.json
-    date = data.get('date')
-    name = data.get('name')
+    ap001_date = data.get('date')
+    ap002_person = data.get('person')
 
-    if not date or not name:
+    if not ap001_date or not ap002_person:
         return jsonify({'message': 'Missing data'}), 400
 
-    existing_appointment = Appointment.query.filter_by(date=date, name=name).first()
-    if existing_appointment:
-        return jsonify({'message': 'Appointment already exists'}), 400
+    result = insert_appointment(ap001_date, ap002_person)
+    if 'errormsg' in result:
+        return jsonify({'message': result['errormsg']}), 400
+    else:
+        return jsonify({'message': result['message']}), 201
 
-    new_appointment = Appointment(date=date, name=name)
-    db.session.add(new_appointment)
-    db.session.commit()
+# Route to fetch all appointments
+@app.route('/appointments', methods=['GET'])
+def get_appointments():
+    df, error = fetch_appointments()
+    if error:
+        return jsonify({'message': error['errormsg']}), 400
+    else:
+        return df.to_json(orient='records'), 200
 
-    return jsonify({'message': 'Reservation successful'}), 201
-
-# Homepage
+# Homepage route
 @app.route('/appointment')
 def index():
     return render_template('appointment.html')
