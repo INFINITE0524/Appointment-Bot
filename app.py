@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 # Configure the PostgreSQL database using the DATABASE_URL environment variable
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('postgresql://apb_user:7jYbxtT3DGMgIydfWLI5zINimel5jGZ1@dpg-cr0l6mrtq21c73ci36c0-a/apb')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://apb_user:7jYbxtT3DGMgIydfWLI5zINimel5jGZ1@dpg-cr0l6mrtq21c73ci36c0-a/apb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize SQLAlchemy and Flask-Migrate
