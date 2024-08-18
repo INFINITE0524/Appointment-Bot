@@ -4,4 +4,5 @@ Werkzeug==2.2.2
 Flask-SQLAlchemy==3.0.3
 flask-migrate==3.1.0
 psycopg2-binary
+numpy==1.24.3
 pandas==2.0.3
