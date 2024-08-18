@@ -25,8 +25,8 @@ class Appointment(db.Model):
         return f'<Appointment {self.id} - {self.date}>'
 
 # Create an appointment
-@app.route('/appointments', methods=['POST'])
-def create_appointment():
+@app.route('/reserve', methods=['POST'])
+def reserve_appointment():
     data = request.json
     date = data.get('date')
     name = data.get('name')
@@ -34,11 +34,15 @@ def create_appointment():
     if not date or not name:
         return jsonify({'message': 'Missing data'}), 400
 
+    existing_appointment = Appointment.query.filter_by(date=date, name=name).first()
+    if existing_appointment:
+        return jsonify({'message': 'Appointment already exists'}), 400
+
     new_appointment = Appointment(date=date, name=name)
     db.session.add(new_appointment)
     db.session.commit()
 
-    return jsonify({'message': 'Appointment created'}), 201
+    return jsonify({'message': 'Reservation successful'}), 201
 
 # Homepage
 @app.route('/appointment')
