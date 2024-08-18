@@ -63,6 +63,7 @@ def get_appointments():
     else:
         return df.to_json(orient='records'), 200
 
+
 # Homepage route
 @app.route('/appointment')
 def index():
