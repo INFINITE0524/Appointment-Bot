@@ -77,12 +77,22 @@
         button:hover {
             background-color: #e64a19;
         }
+        #fetchDataBtn {
+            margin-top: 20px;
+        }
+        #appointmentsList {
+            margin-top: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
 
 <div id="calendar-container">
     <div id='calendar'></div>
+    <button id="fetchDataBtn">获取所有预约</button>
+    <ul id="appointmentsList"></ul>
 </div>
 
 <!-- 模態框 -->
@@ -106,6 +116,8 @@
         var confirmBtn = document.getElementById("confirmBtn");
         var cancelBtn = document.getElementById("cancelBtn");
         var selectedDate;
+        var fetchDataBtn = document.getElementById("fetchDataBtn");
+        var appointmentsList = document.getElementById("appointmentsList");
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
@@ -165,6 +177,25 @@
             if (event.target == modal) {
                 modal.style.display = "none";
             }
+        }
+
+        // 當點擊獲取所有預約按鈕時
+        fetchDataBtn.onclick = function() {
+            fetch('/appointments')
+                .then(response => response.json())
+                .then(data => {
+                    if (Array.isArray(data)) {
+                        appointmentsList.innerHTML = '';
+                        data.forEach(appointment => {
+                            var listItem = document.createElement('li');
+                            listItem.textContent = `日期: ${appointment.AP001}, 預約者: ${appointment.AP002}, 創建時間: ${appointment.CreateDate}`;
+                            appointmentsList.appendChild(listItem);
+                        });
+                    } else {
+                        alert("錯誤: " + data.message);
+                    }
+                })
+                .catch(error => alert("發生錯誤: " + error));
         }
     });
 </script>
