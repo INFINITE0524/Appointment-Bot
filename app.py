@@ -14,11 +14,13 @@ def fetch_appointments():
     if not os.path.exists(dbpath):
         return pd.DataFrame(), {'errormsg': '找不到 APB.db'}
 
-    with lite.connect(dbpath) as con:
-        query = "SELECT * FROM AP00;"
-        df = pd.read_sql_query(query, con)
-    
-    return df, {}
+    try:
+        with lite.connect(dbpath) as con:
+            query = "SELECT * FROM AP00;"
+            df = pd.read_sql_query(query, con)
+        return df, {}
+    except Exception as e:
+        return pd.DataFrame(), {'errormsg': str(e)}
 
 # Function to insert an appointment into the database
 def insert_appointment(ap001_date, ap002_person):
@@ -67,5 +69,9 @@ def index():
     return render_template('appointment.html')
 
 if __name__ == '__main__':
+    # Check if the database exists before starting the app
+    if not os.path.exists(dbpath):
+        raise FileNotFoundError(f"Database file not found: {dbpath}")
+    
     # Run the application
     app.run(debug=True, host='0.0.0.0')
