@@ -145,7 +145,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ date: selectedDate, name: person })
+                    body: JSON.stringify({ date: selectedDate, person: person })
                 })
                 .then(response => response.json())
                 .then(data => {
