@@ -3,6 +3,7 @@ import sqlite3 as lite
 import os
 import pandas as pd
 from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 
@@ -30,7 +31,8 @@ def insert_appointment(ap001_date, ap002_person):
     try:
         with lite.connect(dbpath) as con:
             cur = con.cursor()
-            create_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            tz = pytz.timezone('Asia/Taipei')  # Set the desired timezone
+            create_date = datetime.now(tz).strftime('%Y-%m-%d %H:%M:%S')
             query = "INSERT INTO AP00 (CreateDate, AP001, AP002) VALUES (?, ?, ?);"
             cur.execute(query, (create_date, ap001_date, ap002_person))
             con.commit()
@@ -62,7 +64,6 @@ def get_appointments():
         return jsonify({'message': error['errormsg']}), 400
     else:
         return df.to_json(orient='records'), 200
-
 
 # Homepage route
 @app.route('/appointment')
