@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>圖文選單</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 20px;
+        }
+      
+        button {
+          background-color: #ff5722;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        }
+      
+        button:hover {
+          background-color: #e64a19;
+        }
+
+       #recordList {
+          margin-top: 20px;
+          list-style-type: none;
+          padding: 0;
+        }
+
+        #fetchDataBtn {
+          margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button id="fetchDataBtn">获取所有预约</button>
+    <ul id="recordList"></ul>
+
+<script>
+  var fetchDataBtn = document.getElementById("fetchDataBtn");
+  var recordList = document.getElementById("recordList");
+
+  // 當點擊獲取所有預約按鈕時
+  fetchDataBtn.onclick = function() {
+      fetch('/record')
+          .then(response => response.json())
+          .then(data => {
+              if (Array.isArray(data)) {
+                  recordList.innerHTML = '';
+                  data.forEach(appointment => {
+                      var listItem = document.createElement('li');
+                      listItem.textContent = `日期: ${appointment.AP001}, 預約者: ${appointment.AP002}, 創建時間: ${appointment.CreateDate}`;
+                      recordList.appendChild(listItem);
+                  });
+              } else {
+                  console.log("錯誤: " + data.message);
+              }
+          })
+          .catch(error => console.log("發生錯誤: " + error));
+  }
+</script>
+  
+</body>
+</html>
