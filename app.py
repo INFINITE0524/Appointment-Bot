@@ -50,7 +50,7 @@ def insert_appointment(ap001_date, ap002_person):
         return {'errormsg': str(e)}
 
 # Route to create an appointment
-@app.route('/reserve', methods=['POST'])
+@app.route('/getAppointment', methods=['POST'])
 def reserve_appointment():
     data = request.json
     ap001_date = data.get('date')
@@ -66,7 +66,7 @@ def reserve_appointment():
         return jsonify({'message': result['message']}), 201
 
 # Route to fetch all appointments
-@app.route('/record', methods=['GET'])
+@app.route('/getRecord', methods=['GET'])
 def get_record():
     df, error = fetch_record()
     if error:
@@ -80,7 +80,7 @@ def appointmentHTML():
     return render_template('appointment.html')
 
 # record route
-@app.route('/appointment')
+@app.route('/record')
 def recordHTML():
     return render_template('record.html')
 
