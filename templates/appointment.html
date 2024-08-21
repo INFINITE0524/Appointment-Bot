@@ -163,10 +163,10 @@
                     if (data.message) {
                         alert(data.message);
                     } else if (data.error) {
-                        alert("錯誤: " + data.error);
+                        console.log("錯誤: " + data.error);
                     }
                 })
-                .catch(error => alert("發生錯誤: " + error));
+                .catch(error => console.log("發生錯誤: " + error));
             }
             modal.style.display = "none";
         }
@@ -191,10 +191,10 @@
                             appointmentsList.appendChild(listItem);
                         });
                     } else {
-                        alert("錯誤: " + data.message);
+                        console.log("錯誤: " + data.message);
                     }
                 })
-                .catch(error => alert("發生錯誤: " + error));
+                .catch(error => console.log("發生錯誤: " + error));
         }
     });
 </script>
