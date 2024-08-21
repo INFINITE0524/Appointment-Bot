@@ -139,7 +139,7 @@
         confirmBtn.onclick = function() {
             var person = prompt("請輸入您的姓名");
             if (person) {
-                fetch('/reserve', {
+                fetch('/getAppointment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
