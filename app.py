@@ -36,7 +36,7 @@ def insert_appointment(ap001_date, ap002_person):
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
                 create_date = datetime.now(pytz.timezone('Asia/Taipei')).strftime('%Y-%m-%d %H:%M:%S')
-                query = sql.SQL("INSERT INTO AP00 (CreateDate, AP001, AP002) VALUES (%s, %s, %s);")
+                query = sql.SQL('INSERT INTO "AP00" (CreateDate, AP001, AP002) VALUES (%s, %s, %s);')
                 cur.execute(query, (create_date, ap001_date, ap002_person))
                 conn.commit()
         return {'message': '預約成功'}
