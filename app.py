@@ -21,7 +21,13 @@ def fetch_appointments():
     try:
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
-                query = 'SELECT * FROM "AP00";'
+                query =  '''
+                    SELECT 
+                    TO_CHAR(CreateDate, 'YYYY-MM-DD"T"HH24:MI:SS') AS CreateDate, 
+                    TO_CHAR("AP001", 'YYYY-MM-DD') AS AP001, 
+                    "AP002"
+                    FROM "Ap00";
+                 '''
                 cur.execute(query)
                 rows = cur.fetchall()
                 columns = [desc[0] for desc in cur.description]
@@ -36,7 +42,7 @@ def insert_appointment(ap001_date, ap002_person):
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
                 create_date = datetime.now(pytz.timezone('Asia/Taipei')).strftime('%Y-%m-%d %H:%M:%S')
-                query = sql.SQL('INSERT INTO "AP00" (CreateDate, AP001, AP002) VALUES (%s, %s, %s);')
+                query = sql.SQL('INSERT INTO "AP00" ("CreateDate", "AP001", "AP002") VALUES (%s, %s, %s);')
                 cur.execute(query, (create_date, ap001_date, ap002_person))
                 conn.commit()
         return {'message': '預約成功'}
