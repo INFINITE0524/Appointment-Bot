@@ -3,6 +3,7 @@ import psycopg2
 from psycopg2 import sql
 from datetime import datetime
 import pytz
+import pandas as pd  # 添加 pandas 的导入
 
 app = Flask(__name__)
 
