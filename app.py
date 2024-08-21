@@ -21,7 +21,7 @@ def fetch_appointments():
     try:
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
-                query = "SELECT * FROM AP00;"
+                query = 'SELECT * FROM "AP00";'
                 cur.execute(query)
                 rows = cur.fetchall()
                 columns = [desc[0] for desc in cur.description]
