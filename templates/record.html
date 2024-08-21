@@ -47,7 +47,7 @@
     
       // 當點擊獲取所有預約按鈕時
       fetchDataBtn.onclick = function() {
-          fetch('/record')
+          fetch('/getRecord')
               .then(response => response.json())
               .then(data => {
                   if (Array.isArray(data)) {
