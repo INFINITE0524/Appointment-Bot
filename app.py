@@ -23,7 +23,7 @@ def fetch_appointments():
             with conn.cursor() as cur:
                 query =  '''
                     SELECT 
-                    TO_CHAR(CreateDate, 'YYYY-MM-DD"T"HH24:MI:SS') AS CreateDate, 
+                    TO_CHAR("CreateDate", 'YYYY-MM-DD"T"HH24:MI:SS') AS CreateDate, 
                     TO_CHAR("AP001", 'YYYY-MM-DD') AS AP001, 
                     "AP002"
                     FROM "AP00";
