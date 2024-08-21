@@ -17,7 +17,7 @@ db_params = {
 }
 
 # Function to fetch appointments from the database
-def fetch_appointments():
+def fetch_record():
     try:
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
@@ -66,9 +66,9 @@ def reserve_appointment():
         return jsonify({'message': result['message']}), 201
 
 # Route to fetch all appointments
-@app.route('/appointments', methods=['GET'])
-def get_appointments():
-    df, error = fetch_appointments()
+@app.route('/record', methods=['GET'])
+def get_record():
+    df, error = fetch_record()
     if error:
         return jsonify({'message': error['errormsg']}), 400
     else:
