@@ -74,10 +74,15 @@ def get_record():
     else:
         return df.to_json(orient='records'), 200
 
-# Homepage route
+# appointment route
 @app.route('/appointment')
-def index():
+def appointmentHTML():
     return render_template('appointment.html')
+
+# record route
+@app.route('/appointment')
+def recordHTML():
+    return render_template('record.html')
 
 if __name__ == '__main__':
     # Run the application
