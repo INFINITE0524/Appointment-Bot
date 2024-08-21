@@ -1,41 +1,43 @@
 from flask import Flask, request, jsonify, render_template
-import sqlite3 as lite
-import os
-import pandas as pd
+import psycopg2
+from psycopg2 import sql
 from datetime import datetime
 import pytz
 
 app = Flask(__name__)
 
-# SQLite database path
-dbpath = 'APB.db'
+# PostgreSQL connection parameters using Internal Database URL
+db_params = {
+    'dbname': 'apb_m2t4',
+    'user': 'apb_m2t4_user',
+    'password': '84kTZ1La5ZzJhoQ1EuJpWWq45hQe43VO',
+    'host': 'dpg-cr2jhpo8fa8c73dk3r0g-a.singapore-postgres.render.com',
+    'port': '5432'
+}
 
 # Function to fetch appointments from the database
 def fetch_appointments():
-    if not os.path.exists(dbpath):
-        return pd.DataFrame(), {'errormsg': '找不到 APB.db'}
-
     try:
-        with lite.connect(dbpath) as con:
-            query = "SELECT * FROM AP00;"
-            df = pd.read_sql_query(query, con)
+        with psycopg2.connect(**db_params) as conn:
+            with conn.cursor() as cur:
+                query = "SELECT * FROM AP00;"
+                cur.execute(query)
+                rows = cur.fetchall()
+                columns = [desc[0] for desc in cur.description]
+                df = pd.DataFrame(rows, columns=columns)
         return df, {}
     except Exception as e:
         return pd.DataFrame(), {'errormsg': str(e)}
 
 # Function to insert an appointment into the database
 def insert_appointment(ap001_date, ap002_person):
-    if not os.path.exists(dbpath):
-        return {'errormsg': '找不到 APB.db'}
-
     try:
-        with lite.connect(dbpath) as con:
-            cur = con.cursor()
-            tz = pytz.timezone('Asia/Taipei')  # Set the desired timezone
-            create_date = datetime.now(tz).strftime('%Y-%m-%d %H:%M:%S')
-            query = "INSERT INTO AP00 (CreateDate, AP001, AP002) VALUES (?, ?, ?);"
-            cur.execute(query, (create_date, ap001_date, ap002_person))
-            con.commit()
+        with psycopg2.connect(**db_params) as conn:
+            with conn.cursor() as cur:
+                create_date = datetime.now(pytz.timezone('Asia/Taipei')).strftime('%Y-%m-%d %H:%M:%S')
+                query = sql.SQL("INSERT INTO AP00 (CreateDate, AP001, AP002) VALUES (%s, %s, %s);")
+                cur.execute(query, (create_date, ap001_date, ap002_person))
+                conn.commit()
         return {'message': '預約成功'}
     except Exception as e:
         return {'errormsg': str(e)}
@@ -71,9 +73,5 @@ def index():
     return render_template('appointment.html')
 
 if __name__ == '__main__':
-    # Check if the database exists before starting the app
-    if not os.path.exists(dbpath):
-        raise FileNotFoundError(f"Database file not found: {dbpath}")
-    
     # Run the application
     app.run(debug=True, host='0.0.0.0')
