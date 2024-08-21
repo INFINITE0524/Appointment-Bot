@@ -23,8 +23,8 @@ def fetch_appointments():
             with conn.cursor() as cur:
                 query =  '''
                     SELECT 
-                    TO_CHAR("CreateDate", 'YYYY-MM-DD"T"HH24:MI:SS') AS CreateDate, 
-                    TO_CHAR("AP001", 'YYYY-MM-DD') AS AP001, 
+                    TO_CHAR("CreateDate", 'YYYY-MM-DD HH24:MI:SS.US') AS "CreateDate", 
+                    TO_CHAR("AP001", 'YYYY-MM-DD') AS "AP001", 
                     "AP002"
                     FROM "AP00";
                  '''
@@ -41,7 +41,7 @@ def insert_appointment(ap001_date, ap002_person):
     try:
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
-                create_date = datetime.now(pytz.timezone('Asia/Taipei')).strftime('%Y-%m-%d %H:%M:%S')
+                create_date = datetime.now(pytz.timezone('Asia/Taipei')).strftime('%Y-%m-%d %H:%M:%S.%f')
                 query = sql.SQL('INSERT INTO "AP00" ("CreateDate", "AP001", "AP002") VALUES (%s, %s, %s);')
                 cur.execute(query, (create_date, ap001_date, ap002_person))
                 conn.commit()
