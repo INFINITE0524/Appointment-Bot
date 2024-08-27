@@ -23,11 +23,11 @@ def fetch_record(ap002_person):
             with conn.cursor() as cur:
                 query =  '''
                     SELECT 
-                    TO_CHAR("CreateDate", 'YYYY-MM-DD HH24:MI:SS.US') AS "CreateDate", 
-                    TO_CHAR("AP001", 'YYYY-MM-DD') AS "AP001", 
-                    "AP002"
-                    FROM "AP00"
-                    WHERE "AP002" = %s;
+                    TO_CHAR(ap."AP001", 'YYYY-MM-DD') AS "AP001",
+                    COALESCE(mb."MB002", '未知') AS "MB002"
+                    FROM "AP00" ap
+                    LEFT JOIN "MB00" mb ON ap."AP002" = bmb."MB001"
+                    WHERE ap."AP002" = %s;
                  '''
                 cur.execute(query, (ap002_person,))
                 rows = cur.fetchall()
