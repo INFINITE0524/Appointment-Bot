@@ -42,10 +42,17 @@ def insert_appointment(ap001_date, ap002_person):
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
                 create_date = datetime.now(pytz.timezone('Asia/Taipei')).strftime('%Y-%m-%d %H:%M:%S.%f')
-                query = sql.SQL('INSERT INTO "AP00" ("CreateDate", "AP001", "AP002") VALUES (%s, %s, %s);')
-                cur.execute(query, (create_date, ap001_date, ap002_person))
+                # 插入预约记录
+                query_insert = sql.SQL('INSERT INTO "AP00" ("CreateDate", "AP001", "AP002") VALUES (%s, %s, %s);')
+                cur.execute(query_insert, (create_date, ap001_date, ap002_person))
                 conn.commit()
-        return {'message': '預約成功'}
+                
+                # 查询MB002
+                query_select = sql.SQL('SELECT "MB002" FROM "MB00" WHERE "MB001" = %s;')
+                cur.execute(query_select, (ap002_person,))
+                result = cur.fetchone()
+                
+        return {'message': '預約成功', 'name': result[0]}
     except Exception as e:
         return {'errormsg': str(e)}
 
@@ -63,7 +70,7 @@ def reserve_appointment():
     if 'errormsg' in result:
         return jsonify({'message': result['errormsg']}), 400
     else:
-        return jsonify({'message': result['message']}), 201
+        return jsonify(result), 201
 
 # Route to fetch all appointments
 @app.route('/getRecord', methods=['GET'])
