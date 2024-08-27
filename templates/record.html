@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Record</title>
+    <title>預約紀錄</title>
     <style>
         body {
           font-family: Arial, sans-serif;
@@ -37,7 +37,7 @@
     </style>
 </head>
 <body>
-    <button id="fetchDataBtn">获取所有预约</button>
+    <button id="fetchDataBtn">獲取所有預約</button>
     <ul id="recordList"></ul>
 
 <script>
@@ -62,7 +62,7 @@
                     recordList.innerHTML = '';
                     data.forEach(appointment => {
                         var listItem = document.createElement('li');
-                        listItem.textContent = `日期: ${appointment.AP001}, 預約者: ${appointment.AP002}, 創建時間: ${appointment.CreateDate}`;
+                        listItem.textContent = `日期: ${appointment.AP001}, 預約者: ${appointment.MB002}`;
                         recordList.appendChild(listItem);
                     });
                 } else {
