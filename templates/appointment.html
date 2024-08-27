@@ -106,6 +106,8 @@
         var cancelBtn = document.getElementById("cancelBtn");
         var selectedDate;
 
+        var userId = new URLSearchParams(window.location.search).get('user_id');
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             locale: 'zh-tw',
@@ -137,14 +139,12 @@
 
         // 當點擊確定時處理預約邏輯
         confirmBtn.onclick = function() {
-            var person = prompt("請輸入您的姓名");
-            if (person) {
-                fetch('/getAppointment', {
+            fetch('/getAppointment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ date: selectedDate, person: person })
+                    body: JSON.stringify({ date: selectedDate, person: userId })
                 })
                 .then(response => response.json())
                 .then(data => {
@@ -155,7 +155,6 @@
                     }
                 })
                 .catch(error => console.log("發生錯誤: " + error));
-            }
             modal.style.display = "none";
         }
 
