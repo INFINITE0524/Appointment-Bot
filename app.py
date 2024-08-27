@@ -74,7 +74,7 @@ def reserve_appointment():
         return jsonify(result), 201
 
 # Route to fetch all appointments
-@app.route('/getRecord', methods=['GET'])
+@app.route('/getRecord', methods=['POST'])
 def get_record():
     data = request.json
     ap002_person = data.get('person')
