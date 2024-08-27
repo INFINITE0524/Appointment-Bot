@@ -54,7 +54,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ user_id: userId })  // 以POST方法傳遞user_id參數
+                body: JSON.stringify({ person: userId })  // 以POST方法傳遞user_id參數
             })
             .then(response => response.json())
             .then(data => {
