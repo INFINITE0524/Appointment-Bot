@@ -17,7 +17,7 @@ db_params = {
 }
 
 # Function to fetch appointments from the database
-def fetch_record():
+def fetch_record(ap002_person):
     try:
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
@@ -26,9 +26,10 @@ def fetch_record():
                     TO_CHAR("CreateDate", 'YYYY-MM-DD HH24:MI:SS.US') AS "CreateDate", 
                     TO_CHAR("AP001", 'YYYY-MM-DD') AS "AP001", 
                     "AP002"
-                    FROM "AP00";
+                    FROM "AP00"
+                    WHERE "AP002" = %s;
                  '''
-                cur.execute(query)
+                cur.execute(query, (ap002_person,))
                 rows = cur.fetchall()
                 columns = [desc[0] for desc in cur.description]
                 df = pd.DataFrame(rows, columns=columns)
@@ -75,7 +76,10 @@ def reserve_appointment():
 # Route to fetch all appointments
 @app.route('/getRecord', methods=['GET'])
 def get_record():
-    df, error = fetch_record()
+    data = request.json
+    ap002_person = data.get('person')
+    
+    df, error = fetch_record(ap002_person)
     if error:
         return jsonify({'message': error['errormsg']}), 400
     else:
