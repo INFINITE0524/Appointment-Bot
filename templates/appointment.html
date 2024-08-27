@@ -149,7 +149,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.message) {
-                        alert(data.message);
+                        alert("{data.name}{data.message}");
                     } else if (data.error) {
                         console.log("錯誤: " + data.error);
                     }
