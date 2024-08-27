@@ -127,7 +127,7 @@
 
         calendar.render();
 
-        // 當點擊X時關閉模態框
+        // 當點擊 X 時關閉模態框
         span.onclick = function() {
             modal.style.display = "none";
         }
@@ -149,7 +149,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.message) {
-                        alert(`${data.name},${data.message}`);
+                        alert(`${data.name}, ${data.message}`);
                     } else if (data.error) {
                         console.log("錯誤: " + data.error);
                     }
