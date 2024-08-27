@@ -3,7 +3,7 @@ import psycopg2
 from psycopg2 import sql
 from datetime import datetime
 import pytz
-import pandas as pd  # 添加 pandas 的导入
+import pandas as pd  # 添加 pandas 的導入
 
 app = Flask(__name__)
 
@@ -26,7 +26,7 @@ def fetch_record(ap002_person):
                     TO_CHAR(ap."AP001", 'YYYY-MM-DD') AS "AP001",
                     COALESCE(mb."MB002", '未知') AS "MB002"
                     FROM "AP00" ap
-                    LEFT JOIN "MB00" mb ON ap."AP002" = bmb."MB001"
+                    LEFT JOIN "MB00" mb ON ap."AP002" = mb."MB001"
                     WHERE ap."AP002" = %s;
                  '''
                 cur.execute(query, (ap002_person,))
@@ -43,12 +43,12 @@ def insert_appointment(ap001_date, ap002_person):
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
                 create_date = datetime.now(pytz.timezone('Asia/Taipei')).strftime('%Y-%m-%d %H:%M:%S.%f')
-                # 插入预约记录
+                # 插入預約記錄
                 query_insert = sql.SQL('INSERT INTO "AP00" ("CreateDate", "AP001", "AP002") VALUES (%s, %s, %s);')
                 cur.execute(query_insert, (create_date, ap001_date, ap002_person))
                 conn.commit()
                 
-                # 查询MB002
+                # 查詢MB002
                 query_select = sql.SQL('SELECT "MB002" FROM "MB00" WHERE "MB001" = %s;')
                 cur.execute(query_select, (ap002_person,))
                 result = cur.fetchone()
@@ -65,7 +65,7 @@ def reserve_appointment():
     ap002_person = data.get('person')
 
     if not ap001_date or not ap002_person:
-        return jsonify({'message': 'Missing data'}), 400
+        return jsonify({'message': '缺少資料'}), 400
 
     result = insert_appointment(ap001_date, ap002_person)
     if 'errormsg' in result:
