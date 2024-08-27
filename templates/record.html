@@ -44,25 +44,33 @@
     document.addEventListener('DOMContentLoaded', function() {
       var fetchDataBtn = document.getElementById("fetchDataBtn");
       var recordList = document.getElementById("recordList");
+
+      var userId = new URLSearchParams(window.location.search).get('user_id');    
     
       // 當點擊獲取所有預約按鈕時
       fetchDataBtn.onclick = function() {
-          fetch('/getRecord')
-              .then(response => response.json())
-              .then(data => {
-                  if (Array.isArray(data)) {
-                      recordList.innerHTML = '';
-                      data.forEach(appointment => {
-                          var listItem = document.createElement('li');
-                          listItem.textContent = `日期: ${appointment.AP001}, 預約者: ${appointment.AP002}, 創建時間: ${appointment.CreateDate}`;
-                          recordList.appendChild(listItem);
-                      });
-                  } else {
-                      console.log("錯誤: " + data.message);
-                  }
-              })
-              .catch(error => console.log("發生錯誤: " + error));
-      }
+        fetch('/getRecord', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id: userId })  // 以POST方法傳遞user_id參數
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    recordList.innerHTML = '';
+                    data.forEach(appointment => {
+                        var listItem = document.createElement('li');
+                        listItem.textContent = `日期: ${appointment.AP001}, 預約者: ${appointment.AP002}, 創建時間: ${appointment.CreateDate}`;
+                        recordList.appendChild(listItem);
+                    });
+                } else {
+                    console.log("錯誤: " + data.message);
+                }
+            })
+            .catch(error => console.log("發生錯誤: " + error));
+    }
     });
 </script>
   
