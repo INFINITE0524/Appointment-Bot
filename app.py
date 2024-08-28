@@ -18,7 +18,7 @@ db_params = {
 
 @app.route('/getAppointment', methods=['GET'])
 def get_appointments():
-   try:
+  try:
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
                 query = '''
