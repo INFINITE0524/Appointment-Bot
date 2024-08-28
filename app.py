@@ -16,6 +16,21 @@ db_params = {
     'port': '5432'
 }
 
+@app.route('/getAppointment', methods=['GET'])
+def get_appointments():
+    try:
+        with psycopg2.connect(**db_params) as conn:
+            with conn.cursor() as cur:
+                cur.execute('SELECT "AP001", "AP002" FROM "AP00";')
+                rows = cur.fetchall()
+
+                # 將資料轉換為 FullCalendar 的事件格式
+                appointments = [{"title": row[1], "start": row[0]} for row in rows]
+
+                return jsonify({"appointments": appointments})
+    except Exception as e:
+        return jsonify({"error": str(e)})
+        
 # Function to fetch appointments from the database
 def fetch_record(ap002_person):
     try:
@@ -58,7 +73,7 @@ def insert_appointment(ap001_date, ap002_person):
         return {'errormsg': str(e)}
 
 # Route to create an appointment
-@app.route('/getAppointment', methods=['POST'])
+@app.route('/sentAppointment', methods=['POST'])
 def reserve_appointment():
     data = request.json
     ap001_date = data.get('date')
