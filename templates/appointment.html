@@ -108,24 +108,32 @@
 
         var userId = new URLSearchParams(window.location.search).get('user_id');
 
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'zh-tw',
-            events: [],
-            height: 'auto',
-            headerToolbar: {
-                left: 'prev',
-                center: 'title',
-                right: 'next'
-            },
-            dateClick: function(info) {
-                selectedDate = info.dateStr;
-                modalText.textContent = "你要預約 " + selectedDate + " 嗎?";
-                modal.style.display = "block";
-            }
-        });
+        fetch('/getAppointment', {
+            method: 'GET'
+        })
+        .then(response => response.json())
+        .then(data => {
+            // 2. 用獲取到的預約資料初始化 FullCalendar 的事件
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'zh-tw',
+                events: data.appointments, // 使用從後端獲取的事件數據
+                height: 'auto',
+                headerToolbar: {
+                    left: 'prev',
+                    center: 'title',
+                    right: 'next'
+                },
+                dateClick: function(info) {
+                    selectedDate = info.dateStr;
+                    modalText.textContent = "你要預約 " + selectedDate + " 嗎?";
+                    modal.style.display = "block";
+                }
+            });
 
-        calendar.render();
+            calendar.render();
+        })
+        .catch(error => console.log("發生錯誤: " + error));
 
         // 當點擊 X 時關閉模態框
         span.onclick = function() {
@@ -139,7 +147,7 @@
 
         // 當點擊確定時處理預約邏輯
         confirmBtn.onclick = function() {
-            fetch('/getAppointment', {
+            fetch('/sentAppointment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
