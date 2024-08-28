@@ -18,10 +18,17 @@ db_params = {
 
 @app.route('/getAppointment', methods=['GET'])
 def get_appointments():
-    try:
+   try:
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
-                cur.execute('SELECT "AP001", "AP002" FROM "AP00";')
+                query = '''
+                    SELECT 
+                    TO_CHAR(ap."AP001", 'YYYY-MM-DD') AS "AP001",
+                    COALESCE(mb."MB002", '未知') AS "MB002"
+                    FROM "AP00" ap
+                    LEFT JOIN "MB00" mb ON ap."AP002" = mb."MB001"
+                '''
+                cur.execute(query)
                 rows = cur.fetchall()
 
                 # 將資料轉換為 FullCalendar 的事件格式
