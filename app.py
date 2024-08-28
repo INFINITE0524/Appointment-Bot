@@ -18,7 +18,7 @@ db_params = {
 
 @app.route('/getAppointment', methods=['GET'])
 def get_appointments():
-  try:
+    try:
         with psycopg2.connect(**db_params) as conn:
             with conn.cursor() as cur:
                 query = '''
@@ -31,7 +31,7 @@ def get_appointments():
                 cur.execute(query)
                 rows = cur.fetchall()
 
-                # 將資料轉換為 FullCalendar 的事件格式
+                # 将数据转换为 FullCalendar 的事件格式
                 appointments = [{"title": row[1], "start": row[0]} for row in rows]
 
                 return jsonify({"appointments": appointments})
