@@ -172,7 +172,7 @@
                 },
                 dayCellDidMount: function(info) {
                     var cellDate = info.date.toISOString().split('T')[0];
-                    if (existingDates.includes(cellDate) || cellDate < today) {
+                    if (existingDates.includes(cellDate)) {
                         info.el.classList.add('fc-day-disabled');
                         info.el.style.backgroundColor = '#f4f4f4'; // 灰色背景表示不可選日期
                         info.el.style.cursor = 'not-allowed';
