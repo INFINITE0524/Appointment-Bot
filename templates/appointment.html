@@ -161,7 +161,10 @@
                 },
                 dateClick: function(info) {
                     selectedDate = info.dateStr;
-                    if (existingDates.includes(selectedDate)) {
+                    if (selectedDate <= today) {
+                        return
+                    }
+                    else if (existingDates.includes(selectedDate)) {
                         modalText.textContent = "今日已有預約";
                         document.querySelector('.modal-footer').classList.add('d-none'); // 隱藏模態框底部區域
                     } else {
@@ -173,7 +176,7 @@
                 dayCellDidMount: function(info) {
                     var cellDate = info.date.toLocaleDateString('en-CA');
                     console.log('Cell Date:', cellDate);
-                    if (existingDates.includes(cellDate)||cellDate<today) {
+                    if (existingDates.includes(cellDate)||cellDate<=today) {
                         console.log('Matched Date:', cellDate);
                         info.el.classList.add('fc-day-disabled');
                         info.el.style.backgroundColor = '#f4f4f4'; // 灰色背景表示不可選日期
