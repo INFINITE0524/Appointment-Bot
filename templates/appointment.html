@@ -171,7 +171,7 @@
                     modal.style.display = "block";
                 },
                 dayCellDidMount: function(info) {
-                    var cellDate = info.date.toISOString().split('T')[0];
+                    var cellDate = info.dateStr;
                     if (existingDates.includes(cellDate)) {
                         info.el.classList.add('fc-day-disabled');
                         info.el.style.backgroundColor = '#f4f4f4'; // 灰色背景表示不可選日期
