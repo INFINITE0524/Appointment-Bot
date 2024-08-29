@@ -140,9 +140,11 @@
                     if (existingDates.includes(selectedDate)) {
                         modalText.textContent = "今日已有預約";
                         confirmBtn.style.display = 'none'; // 隱藏確定按鈕
+                        cancelBtn .style.display = 'none'; // 隱藏取消按鈕
                     } else {
                         modalText.textContent = "你要預約 " + selectedDate + " 嗎?";
                         confirmBtn.style.display = 'block'; // 顯示確定按鈕
+                        cancelBtn .style.display = 'block'; // 顯示取消按鈕
                     }
                     modal.style.display = "block";
                 }
