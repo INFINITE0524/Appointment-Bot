@@ -138,7 +138,7 @@
         .then(response => response.json())
         .then(data => {
             var existingDates = data.appointments.map(row => row.start);
-            console.log(existingDates)
+            console.log(existingDates,today)
             // 2. 用獲取到的預約資料初始化 FullCalendar 的事件
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
