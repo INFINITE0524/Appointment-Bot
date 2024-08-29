@@ -143,9 +143,6 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'zh-tw',
-                validRange: {
-                    start: today // 禁用今天之前的日期
-                },
                 events: data.appointments.map(row => {
                     return {
                         title: row.title, // 顯示已預約的人名或其他資訊
@@ -172,6 +169,11 @@
                         document.querySelector('.modal-footer').classList.remove('d-none'); // 顯示模態框底部區域
                     }
                     modal.style.display = "block";
+                },
+                dayRender: function(date, cell){
+                    if (date < today){
+                        $(cell).addClass('disabled');
+                    }
                 }
                 
             });
