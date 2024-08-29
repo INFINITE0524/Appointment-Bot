@@ -113,15 +113,16 @@
         })
         .then(response => response.json())
         .then(data => {
-            var existingDates = data.appointments.map(app => app.start);
+            var existingDates = data.appointments.map(row => row.start);
+            console.log(existingDates)
             // 2. 用獲取到的預約資料初始化 FullCalendar 的事件
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'zh-tw',
-                events: data.appointments.map(app => {
+                events: data.appointments.map(row => {
                     return {
-                        title: app.person, // 顯示已預約的人名或其他資訊
-                        start: app.start,
+                        title: row.title, // 顯示已預約的人名或其他資訊
+                        start: row.start,
                         backgroundColor: '#d3d3d3', // 設定已預約的日期背景色為灰色
                         borderColor: '#d3d3d3', // 設定已預約的日期邊框色為灰色
                         editable: false, // 禁用已預約事件的編輯
@@ -145,7 +146,8 @@
                         info.el.style.backgroundColor = '#000'; // 修改背景顏色
                         info.el.style.pointerEvents = 'none'; // 禁用點擊事件
                     }
-                }
+                },
+                
             });
 
             calendar.render();
