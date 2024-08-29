@@ -130,6 +130,7 @@
         var selectedDate;
 
         var userId = new URLSearchParams(window.location.search).get('user_id');
+        var today = new Date().toISOString().split('T')[0]; // 今天的日期，格式為 YYYY-MM-DD
 
         fetch('/getAppointment', {
             method: 'GET'
