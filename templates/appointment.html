@@ -138,7 +138,6 @@
         .then(response => response.json())
         .then(data => {
             var existingDates = data.appointments.map(row => row.start);
-            console.log(existingDates,today)
             // 2. 用獲取到的預約資料初始化 FullCalendar 的事件
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
@@ -174,7 +173,6 @@
                 },
                 dayCellDidMount: function(info) {
                     var cellDate = info.date.toLocaleDateString('en-CA');
-                    console.log('Cell Date:', cellDate);
                     if (existingDates.includes(cellDate)||cellDate < today) {
                         // 如果日期已預約，設置較淺的灰色背景
                         info.el.classList.add('fc-day-disabled');
