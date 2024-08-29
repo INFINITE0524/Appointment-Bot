@@ -165,8 +165,7 @@
                         return
                     }
                     else if (existingDates.includes(selectedDate)) {
-                        modalText.textContent = "今日已有預約";
-                        document.querySelector('.modal-footer').classList.add('d-none'); // 隱藏模態框底部區域
+                       return
                     } else {
                         modalText.textContent = "你要預約 " + selectedDate + " 嗎?";
                         document.querySelector('.modal-footer').classList.remove('d-none'); // 顯示模態框底部區域
@@ -176,12 +175,7 @@
                 dayCellDidMount: function(info) {
                     var cellDate = info.date.toLocaleDateString('en-CA');
                     console.log('Cell Date:', cellDate);
-                    if (cellDate < today) {
-                        // 如果日期過期，設置深灰色背景
-                        info.el.classList.add('fc-day-disabled');
-                        info.el.style.backgroundColor = '#d3d3d3'; // 深灰色背景
-                        info.el.style.cursor = 'not-allowed';
-                    } else if (existingDates.includes(cellDate)) {
+                    if (existingDates.includes(cellDate)||cellDate < today) {
                         // 如果日期已預約，設置較淺的灰色背景
                         info.el.classList.add('fc-day-disabled');
                         info.el.style.backgroundColor = '#f4f4f4'; // 較淺的灰色背景
