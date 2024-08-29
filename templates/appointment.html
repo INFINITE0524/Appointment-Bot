@@ -28,6 +28,19 @@
             margin: 0 auto;
             height: auto;
         }
+        /* 避免 FullCalendar 樣式被 Bootstrap 覆蓋 */
+        .fc {
+            color: inherit; /* 確保文本顏色不受 Bootstrap 影響 */
+            text-decoration: none; /* 取消下劃線 */
+        }
+        .fc-toolbar-title {
+            color: inherit; /* 確保標題顏色不受影響 */
+            text-decoration: none; /* 取消下劃線 */
+        }
+        .fc-daygrid-day-number {
+            color: inherit; /* 確保日期數字顏色不受影響 */
+        }
+        
         /* 模態框樣式 */
         .modal {
             display: none;
