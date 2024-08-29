@@ -154,12 +154,10 @@
                     selectedDate = info.dateStr;
                     if (existingDates.includes(selectedDate)) {
                         modalText.textContent = "今日已有預約";
-                        confirmBtn.classList.add('d-none'); // 隱藏確定按鈕
-                        cancelBtn.classList.add('d-none');  // 隱藏取消按鈕
+                        document.querySelector('.modal-footer').classList.add('d-none'); // 隱藏模態框底部區域
                     } else {
                         modalText.textContent = "你要預約 " + selectedDate + " 嗎?";
-                        confirmBtn.classList.remove('d-none'); // 顯示確定按鈕
-                        cancelBtn.classList.remove('d-none');  // 顯示取消按鈕
+                        document.querySelector('.modal-footer').classList.remove('d-none'); // 顯示模態框底部區域
                     }
                     modal.style.display = "block";
                 }
