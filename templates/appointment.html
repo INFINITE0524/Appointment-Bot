@@ -137,16 +137,15 @@
                 },
                 dateClick: function(info) {
                     selectedDate = info.dateStr;
-                    modalText.textContent = "你要預約 " + selectedDate + " 嗎?";
-                    modal.style.display = "block";
-                },
-                dayCellDidMount: function(info) {
-                    if (existingDates.includes(info.dateStr)) {
-                        // 如果日期已經有預約，修改整個 td 的背景顏色
-                        info.el.style.backgroundColor = '#000'; // 修改背景顏色
-                        info.el.style.pointerEvents = 'none'; // 禁用點擊事件
+                    if (existingDates.includes(selectedDate)) {
+                        modalText.textContent = "今日已有預約";
+                        confirmBtn.style.display = 'none'; // 隱藏確定按鈕
+                    } else {
+                        modalText.textContent = "你要預約 " + selectedDate + " 嗎?";
+                        confirmBtn.style.display = 'block'; // 顯示確定按鈕
                     }
-                },
+                    modal.style.display = "block";
+                }
                 
             });
 
