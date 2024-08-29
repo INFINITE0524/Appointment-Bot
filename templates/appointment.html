@@ -118,7 +118,16 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'zh-tw',
-                events: data.appointments, // 使用從後端獲取的事件數據
+                events: data.appointments.map(app => {
+                    return {
+                        title: app.person, // 顯示已預約的人名或其他資訊
+                        start: app.start,
+                        backgroundColor: '#d3d3d3', // 設定已預約的日期背景色為灰色
+                        borderColor: '#d3d3d3', // 設定已預約的日期邊框色為灰色
+                        editable: false, // 禁用已預約事件的編輯
+                        display: 'block' // 確保事件全寬顯示
+                    };
+                }), // 使用從後端獲取的事件數據
                 height: 'auto',
                 headerToolbar: {
                     left: 'prev',
@@ -133,7 +142,7 @@
                 dayCellDidMount: function(info) {
                     if (existingDates.includes(info.dateStr)) {
                         // 如果日期已經有預約，修改整個 td 的背景顏色
-                        info.el.style.backgroundColor = '#d3d3d3'; // 修改背景顏色
+                        info.el.style.backgroundColor = '#000'; // 修改背景顏色
                         info.el.style.pointerEvents = 'none'; // 禁用點擊事件
                     }
                 }
