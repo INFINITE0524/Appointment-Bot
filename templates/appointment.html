@@ -176,10 +176,15 @@
                 dayCellDidMount: function(info) {
                     var cellDate = info.date.toLocaleDateString('en-CA');
                     console.log('Cell Date:', cellDate);
-                    if (existingDates.includes(cellDate)||cellDate<=today) {
-                        console.log('Matched Date:', cellDate);
+                    if (cellDate < today) {
+                        // 如果日期過期，設置深灰色背景
                         info.el.classList.add('fc-day-disabled');
-                        info.el.style.backgroundColor = '#f4f4f4'; // 灰色背景表示不可選日期
+                        info.el.style.backgroundColor = '#d3d3d3'; // 深灰色背景
+                        info.el.style.cursor = 'not-allowed';
+                    } else if (existingDates.includes(cellDate)) {
+                        // 如果日期已預約，設置較淺的灰色背景
+                        info.el.classList.add('fc-day-disabled');
+                        info.el.style.backgroundColor = '#f4f4f4'; // 較淺的灰色背景
                         info.el.style.cursor = 'not-allowed';
                     }
                 }
