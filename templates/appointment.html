@@ -173,7 +173,7 @@
                 },
                 dayCellDidMount: function(info) {
                     var cellDate = info.date.toLocaleDateString('en-CA');
-                    if (existingDates.includes(cellDate)||cellDate < today) {
+                    if (existingDates.includes(cellDate)||cellDate <= today) {
                         // 如果日期已預約，設置較淺的灰色背景
                         info.el.classList.add('fc-day-disabled');
                         info.el.style.backgroundColor = '#f4f4f4'; // 較淺的灰色背景
