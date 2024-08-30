@@ -6,50 +6,81 @@
     <title>Record</title>
     <style>
         body {
-          font-family: Arial, sans-serif;
-          background-color: #f4f4f4;
-          margin: 0;
-          padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
         }
       
         button {
-          background-color: #ff5722;
-          color: white;
-          padding: 10px 20px;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
+            background-color: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
       
         button:hover {
-          background-color: #e64a19;
+            background-color: #e64a19;
         }
 
-       #recordList {
-          margin-top: 20px;
-          list-style-type: none;
-          padding: 0;
+        #recordList {
+            margin-top: 20px;
+            list-style-type: none;
+            padding: 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #recordList li {
+            background-color: #ffffff;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            color: #333;
+            transition: transform 0.3s ease;
+        }
+
+        #recordList li:hover {
+            transform: translateY(-3px);
         }
 
         #fetchDataBtn {
-          margin-top: 20px;
+            display: block;
+            margin: 20px auto;
+            max-width: 200px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body>
+
+    <h1>預約紀錄</h1>
     <button id="fetchDataBtn">獲取所有預約</button>
     <ul id="recordList"></ul>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-      var fetchDataBtn = document.getElementById("fetchDataBtn");
-      var recordList = document.getElementById("recordList");
+        var fetchDataBtn = document.getElementById("fetchDataBtn");
+        var recordList = document.getElementById("recordList");
 
-      var userId = new URLSearchParams(window.location.search).get('user_id');    
-    
-      // 當點擊獲取所有預約按鈕時
-      fetchDataBtn.onclick = function() {
-        fetch('/getRecord', {
+        var userId = new URLSearchParams(window.location.search).get('user_id');    
+
+        // 當點擊獲取所有預約按鈕時
+        fetchDataBtn.onclick = function() {
+            fetch('/getRecord', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -70,9 +101,9 @@
                 }
             })
             .catch(error => console.log("發生錯誤: " + error));
-    }
+        }
     });
 </script>
-  
+
 </body>
 </html>
